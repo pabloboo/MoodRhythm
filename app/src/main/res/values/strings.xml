@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Mood Rhythm</string>
+    <string name="happy">Happy</string>
+    <string name="sad">Sad</string>
+    <string name="calm">Calm</string>
+    <string name="anxious">Anxious</string>
+    <string name="excited">Excited</string>
+    <string name="tired">Tired</string>
 </resources>
