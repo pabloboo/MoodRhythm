@@ -1,5 +1,6 @@
 package com.moodrhythm
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -18,6 +19,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -35,7 +38,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.moodrhythm.model.Emotion
+import com.moodrhythm.model.emotions
 import com.moodrhythm.ui.theme.MoodRhythmTheme
+import com.moodrhythm.utils.SharedPrefsConstants
+import com.moodrhythm.utils.setSharedPreferencesValueInt
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -53,7 +60,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen() {
-    var formattedDate: String
+    val formattedDate: String
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val today = LocalDate.now()
         val formatter = DateTimeFormatter.ofPattern("d MMMM")
@@ -62,6 +69,7 @@ fun MainScreen() {
         formattedDate = "Today"
     }
 
+    val context = LocalContext.current
     val selectedEmotion = remember { mutableStateOf(emotions[0]) }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -115,9 +123,24 @@ fun MainScreen() {
 
             Image(
                 painter = painterResource(selectedEmotion.value.imageId),
-                contentDescription = null,
+                contentDescription = "Selected emotion icon",
                 modifier = Modifier.size(200.dp)
             )
+
+            Button(
+                shape = RoundedCornerShape(50),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surface),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface),
+                onClick = {
+                    setSharedPreferencesValueInt(context, SharedPrefsConstants.CURRENT_DAY_EMOTION_ID, selectedEmotion.value.id)
+                    val intent = Intent(context, ResultsActivity::class.java)
+                    context.startActivity(intent)
+                }) {
+                Text(
+                    text = LocalContext.current.getString(R.string.continueStr),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
         }
     }
 }

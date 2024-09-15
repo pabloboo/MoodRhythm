@@ -13,6 +13,11 @@
         android:theme="@style/Theme.MoodRhythm"
         tools:targetApi="31">
         <activity
+            android:name=".ResultsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_results"
+            android:theme="@style/Theme.MoodRhythm" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
