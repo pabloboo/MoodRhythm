@@ -13,20 +13,24 @@
         android:theme="@style/Theme.MoodRhythm"
         tools:targetApi="31">
         <activity
-            android:name=".ResultsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_results"
-            android:theme="@style/Theme.MoodRhythm" />
-        <activity
-            android:name=".MainActivity"
+            android:name=".LauncherActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.MoodRhythm">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ResultsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_results"
+            android:theme="@style/Theme.MoodRhythm" />
+        <activity
+            android:name=".MoodSelectionActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MoodRhythm">
         </activity>
     </application>
 

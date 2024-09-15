@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import com.moodrhythm.model.findEmotionById
 import com.moodrhythm.ui.theme.MoodRhythmTheme
 import com.moodrhythm.utils.SharedPrefsConstants
+import com.moodrhythm.utils.getCurrentDayEmotionIdKey
 import com.moodrhythm.utils.getSharedPreferencesValueInt
 
 class ResultsActivity : ComponentActivity() {
@@ -45,9 +46,8 @@ class ResultsActivity : ComponentActivity() {
 @Composable
 fun ResultsScreen() {
     val context = LocalContext.current
-    val emotionId = getSharedPreferencesValueInt(context, SharedPrefsConstants.CURRENT_DAY_EMOTION_ID)
+    val emotionId = getSharedPreferencesValueInt(context, getCurrentDayEmotionIdKey())
     val emotion = findEmotionById(emotionId)
-    Log.d("ResultsScreen", "Emotion: $emotionId")
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column (

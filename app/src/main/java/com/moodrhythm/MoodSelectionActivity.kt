@@ -1,7 +1,6 @@
 package com.moodrhythm
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -42,11 +41,12 @@ import com.moodrhythm.model.Emotion
 import com.moodrhythm.model.emotions
 import com.moodrhythm.ui.theme.MoodRhythmTheme
 import com.moodrhythm.utils.SharedPrefsConstants
+import com.moodrhythm.utils.getCurrentDayEmotionIdKey
 import com.moodrhythm.utils.setSharedPreferencesValueInt
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class MainActivity : ComponentActivity() {
+class MoodSelectionActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -60,14 +60,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen() {
-    val formattedDate: String
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val today = LocalDate.now()
-        val formatter = DateTimeFormatter.ofPattern("d MMMM")
-        formattedDate = today.format(formatter)
-    } else {
-        formattedDate = "Today"
-    }
+    val today = LocalDate.now()
+    val formatter = DateTimeFormatter.ofPattern("d MMMM")
+    val formattedDate = today.format(formatter)
 
     val context = LocalContext.current
     val selectedEmotion = remember { mutableStateOf(emotions[0]) }
@@ -132,7 +127,7 @@ fun MainScreen() {
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surface),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface),
                 onClick = {
-                    setSharedPreferencesValueInt(context, SharedPrefsConstants.CURRENT_DAY_EMOTION_ID, selectedEmotion.value.id)
+                    setSharedPreferencesValueInt(context, getCurrentDayEmotionIdKey(), selectedEmotion.value.id)
                     val intent = Intent(context, ResultsActivity::class.java)
                     context.startActivity(intent)
                 }) {
