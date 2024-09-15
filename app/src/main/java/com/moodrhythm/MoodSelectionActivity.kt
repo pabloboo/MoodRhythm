@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.sp
 import com.moodrhythm.model.Emotion
 import com.moodrhythm.model.emotions
 import com.moodrhythm.ui.theme.MoodRhythmTheme
-import com.moodrhythm.utils.SharedPrefsConstants
 import com.moodrhythm.utils.getCurrentDayEmotionIdKey
 import com.moodrhythm.utils.setSharedPreferencesValueInt
 import java.time.LocalDate

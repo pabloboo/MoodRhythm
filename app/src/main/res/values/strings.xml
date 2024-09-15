@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Mood Rhythm</string>
     <string name="happy">Happy</string>
     <string name="sad">Sad</string>
@@ -8,8 +8,7 @@
     <string name="tired">Tired</string>
     <string name="whats_your_mood_like_today">What\'s your mood like today?</string>
     <string name="continueStr">Continue</string>
-    <string name="title_activity_results">ResultsActivity</string>
-    <string name="your_are_feeling">You are feeling</string>
+    <string name="your_are_feeling">You are feeling %1$s today</string>
     <string name="today">Today</string>
     <string name="check_your_mood_playlist">Listen to your mood playlist</string>
     <string name="last_week_mood_history">Your Last Week\'s Mood History</string>

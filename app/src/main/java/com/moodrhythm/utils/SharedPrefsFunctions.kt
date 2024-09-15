@@ -24,3 +24,20 @@ fun setSharedPreferencesValueInt(activity: Context, key: String, value: Int) {
     editor.putInt(key, value)
     editor.apply()
 }
+
+fun getSharedPreferencesValueString(activity: Context, key: String): String {
+    val sharedPreferences = activity.getSharedPreferences(SharedPrefsConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+    return sharedPreferences.getString(key, "") ?: ""
+}
+
+fun setSharedPreferencesValueString(activity: Context, key: String, value: String) {
+    val sharedPreferences = activity.getSharedPreferences(SharedPrefsConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+    val editor = sharedPreferences.edit()
+    editor.putString(key, value)
+    editor.apply()
+}
+
+fun getSharedPreferencesLocale(activity: Context, key: String): String {
+    val sharedPreferences = activity.getSharedPreferences(SharedPrefsConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+    return sharedPreferences.getString(key, "en") ?: "en"
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mood Rhythm</string>
+    <string name="happy">Feliz</string>
+    <string name="sad">Triste</string>
+    <string name="calm">Calmado</string>
+    <string name="anxious">Ansioso</string>
+    <string name="excited">Emocionado</string>
+    <string name="tired">Cansado</string>
+    <string name="whats_your_mood_like_today">¿Cómo te sientes hoy?</string>
+    <string name="continueStr">Continuar</string>
+    <string name="your_are_feeling">Hoy te sientes %1$s</string>
+    <string name="today">Hoy</string>
+    <string name="check_your_mood_playlist">Escucha tu lista de reproducción según tu estado de ánimo</string>
+    <string name="last_week_mood_history">Historial de tu estado de ánimo de la última semana</string>
+</resources>

@@ -23,7 +23,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,9 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,9 +41,11 @@ import com.moodrhythm.model.findEmotionById
 import com.moodrhythm.ui.theme.MoodRhythmTheme
 import com.moodrhythm.utils.SharedPrefsConstants
 import com.moodrhythm.utils.getCurrentDayEmotionIdKey
+import com.moodrhythm.utils.getSharedPreferencesLocale
 import com.moodrhythm.utils.getSharedPreferencesValueInt
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class ResultsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,9 +75,7 @@ fun ResultsScreen() {
                 .background(emotion.color)
         ) {
             Text(
-                text = context.getString(R.string.your_are_feeling) + " " +
-                        context.getString(emotion.name) + " " +
-                        context.getString(R.string.today),
+                text = context.getString(R.string.your_are_feeling, context.getString(emotion.name)),
                 modifier = Modifier.padding(16.dp),
                 color = emotion.textColor,
                 fontSize = 24.sp,
@@ -111,6 +108,7 @@ fun ResultsScreen() {
                 text = context.getString(R.string.last_week_mood_history),
                 fontWeight = FontWeight.Bold,
                 color = emotion.textColor,
+                textAlign = TextAlign.Center,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
@@ -143,11 +141,11 @@ fun MoodHistoryItem(entry: Pair<String, Emotion>) {
                 .padding(16.dp)
         ) {
             Image(
-                painter = painterResource(id = entry.second.imageId),
+                painter = painterResource(id = entry.second.whiteImageId),
                 contentDescription = "Mood icon",
                 modifier = Modifier.size(100.dp).padding(end = 16.dp)
             )
-            Column {
+            Column (modifier = Modifier.align(Alignment.CenterVertically)) {
                 Text(
                     text = context.getString(entry.second.name),
                     color = Color.Black
@@ -173,7 +171,13 @@ fun getMoodHistory(context: Context): List<Pair<String, Emotion>> {
         val key = SharedPrefsConstants.CURRENT_DAY_EMOTION_ID + "-" + date.format(formatter)
         val moodId = getSharedPreferencesValueInt(context, key)
         if (moodId != -1) {
-            val dayOfWeek = date.dayOfWeek.name.capitalize(Locale("en"))
+            val dayOfWeek: String
+            if (key == getCurrentDayEmotionIdKey()) {
+                dayOfWeek = context.getString(R.string.today).uppercase()
+            } else {
+                val locale = getSharedPreferencesLocale(context, SharedPrefsConstants.LANGUAGE)
+                dayOfWeek = date.dayOfWeek.getDisplayName(java.time.format.TextStyle.FULL, Locale(locale)).uppercase()
+            }
             val mood = findEmotionById(moodId)
             moodHistory.add(Pair(dayOfWeek, mood))
         }
