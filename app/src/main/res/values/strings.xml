@@ -12,5 +12,5 @@
     <string name="your_are_feeling">You are feeling</string>
     <string name="today">Today</string>
     <string name="check_your_mood_playlist">Listen to your mood playlist</string>
-    <string name="mood_history">Your Mood History</string>
+    <string name="last_week_mood_history">Your Last Week\'s Mood History</string>
 </resources>

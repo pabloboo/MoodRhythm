@@ -3,7 +3,6 @@ package com.moodrhythm
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -12,26 +11,35 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.moodrhythm.model.Emotion
 import com.moodrhythm.model.findEmotionById
 import com.moodrhythm.ui.theme.MoodRhythmTheme
 import com.moodrhythm.utils.SharedPrefsConstants
@@ -100,27 +108,64 @@ fun ResultsScreen() {
 
             // Display mood history
             Text(
-                text = context.getString(R.string.mood_history),
+                text = context.getString(R.string.last_week_mood_history),
                 fontWeight = FontWeight.Bold,
                 color = emotion.textColor,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            LazyColumn {
+            LazyRow {
                 items(moodHistory) { entry ->
-                    Text(
-                        text = entry,
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
+                    MoodHistoryItem(entry = entry)
                 }
             }
         }
     }
 }
 
+@Composable
+fun MoodHistoryItem(entry: Pair<String, Emotion>) {
+    val context = LocalContext.current
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 4.dp
+        ),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Image(
+                painter = painterResource(id = entry.second.imageId),
+                contentDescription = "Mood icon",
+                modifier = Modifier.size(100.dp).padding(end = 16.dp)
+            )
+            Column {
+                Text(
+                    text = context.getString(entry.second.name),
+                    color = Color.Black
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = entry.first,
+                    color = Color.Black
+                )
+            }
+        }
+    }
+    Spacer(modifier = Modifier.width(8.dp))
+}
+
 // Function to get the mood history of the last week
-fun getMoodHistory(context: Context): List<String> {
-    val moodHistory = ArrayList<String>()
+fun getMoodHistory(context: Context): List<Pair<String, Emotion>> {
+    val moodHistory = ArrayList<Pair<String, Emotion>>()
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     var date = LocalDate.now().minusDays(6)
 
@@ -128,8 +173,9 @@ fun getMoodHistory(context: Context): List<String> {
         val key = SharedPrefsConstants.CURRENT_DAY_EMOTION_ID + "-" + date.format(formatter)
         val moodId = getSharedPreferencesValueInt(context, key)
         if (moodId != -1) {
+            val dayOfWeek = date.dayOfWeek.name.capitalize(Locale("en"))
             val mood = findEmotionById(moodId)
-            moodHistory.add("Date: ${date.format(formatter)}, Mood: ${context.getString(mood.name)}")
+            moodHistory.add(Pair(dayOfWeek, mood))
         }
         date = date.plusDays(1)
     }

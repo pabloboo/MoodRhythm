@@ -2,12 +2,12 @@ package com.moodrhythm
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import com.moodrhythm.utils.getCurrentDayEmotionIdKey
 import com.moodrhythm.utils.getSharedPreferencesValueInt
 
-class LauncherActivity : AppCompatActivity() {
+class LauncherActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
