@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
@@ -67,6 +68,10 @@ fun ResultsScreen() {
     val emotionId = getSharedPreferencesValueInt(context, getCurrentDayEmotionIdKey())
     val emotion = findEmotionById(emotionId)
     val moodHistory = getMoodHistory(context)
+
+    BackHandler (enabled = true) {
+        // Don't allow back navigation
+    }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column (
