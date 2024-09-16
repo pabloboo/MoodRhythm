@@ -13,4 +13,5 @@
     <string name="today">Hoy</string>
     <string name="check_your_mood_playlist">Escucha tu lista de reproducción según tu estado de ánimo</string>
     <string name="last_week_mood_history">Historial de tu estado de ánimo de la última semana</string>
+    <string name="yearly_stats">Estadísticas anuales</string>
 </resources>

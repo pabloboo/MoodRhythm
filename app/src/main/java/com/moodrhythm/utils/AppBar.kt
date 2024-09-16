@@ -1,13 +1,13 @@
 package com.moodrhythm.utils
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,12 +24,11 @@ fun CustomAppBar(
     onIconClick: (() -> Unit)? = null,
     onBackClick: (() -> Unit)? = null,
     backgroundColor: Color = Color.Transparent,
-    contentColor: Color = Color.Black
+    contentColor: Color = MaterialTheme.colorScheme.onBackground
 ) {
     Box(modifier = Modifier.fillMaxWidth().background(color = backgroundColor)) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth()
         ) {
             onBackClick?.let {
                 IconButton(onClick = { onBackClick.invoke() }) {
@@ -40,7 +39,7 @@ fun CustomAppBar(
             Text(
                 text = LocalContext.current.getString(R.string.app_name),
                 color = contentColor,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp).weight(1f)
             )
 
             icon?.let {

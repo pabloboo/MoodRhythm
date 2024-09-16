@@ -3,7 +3,6 @@ package com.moodrhythm
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -39,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.moodrhythm.model.Emotion
 import com.moodrhythm.model.findEmotionById
+import com.moodrhythm.stats.StatsActivity
 import com.moodrhythm.ui.theme.MoodRhythmTheme
 import com.moodrhythm.utils.CustomAppBar
 import com.moodrhythm.utils.SharedPrefsConstants
@@ -79,9 +79,8 @@ fun ResultsScreen() {
             CustomAppBar(
                 icon = R.drawable.ic_stats,
                 onIconClick = {
-                    //val intent = Intent(context, StatsActivity::class.java)
-                    //context.startActivity(intent)
-                    Toast.makeText(context, "Stats feature is not implemented yet", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(context, StatsActivity::class.java)
+                    context.startActivity(intent)
                 },
                 contentColor = emotion.textColor
             )

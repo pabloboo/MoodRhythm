@@ -12,4 +12,5 @@
     <string name="today">Today</string>
     <string name="check_your_mood_playlist">Listen to your mood playlist</string>
     <string name="last_week_mood_history">Your Last Week\'s Mood History</string>
+    <string name="yearly_stats">Yearly stats</string>
 </resources>
