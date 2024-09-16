@@ -3,6 +3,7 @@ package com.moodrhythm
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.moodrhythm.model.Emotion
 import com.moodrhythm.model.findEmotionById
 import com.moodrhythm.ui.theme.MoodRhythmTheme
+import com.moodrhythm.utils.CustomAppBar
 import com.moodrhythm.utils.SharedPrefsConstants
 import com.moodrhythm.utils.getCurrentDayEmotionIdKey
 import com.moodrhythm.utils.getSharedPreferencesLocale
@@ -74,6 +76,15 @@ fun ResultsScreen() {
                 .fillMaxSize()
                 .background(emotion.color)
         ) {
+            CustomAppBar(
+                icon = R.drawable.ic_stats,
+                onIconClick = {
+                    //val intent = Intent(context, StatsActivity::class.java)
+                    //context.startActivity(intent)
+                    Toast.makeText(context, "Stats feature is not implemented yet", Toast.LENGTH_SHORT).show()
+                },
+                contentColor = emotion.textColor
+            )
             Text(
                 text = context.getString(R.string.your_are_feeling, context.getString(emotion.name)),
                 modifier = Modifier.padding(16.dp),

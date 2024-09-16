@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.moodrhythm.model.Emotion
 import com.moodrhythm.model.emotions
 import com.moodrhythm.ui.theme.MoodRhythmTheme
+import com.moodrhythm.utils.CustomAppBar
 import com.moodrhythm.utils.getCurrentDayEmotionIdKey
 import com.moodrhythm.utils.setSharedPreferencesValueInt
 import java.time.LocalDate
@@ -74,6 +75,9 @@ fun MainScreen() {
                 .fillMaxSize()
                 .background(selectedEmotion.value.color)
         ) {
+            CustomAppBar(
+                contentColor = selectedEmotion.value.textColor
+            )
             Text(
                 text = LocalContext.current.getString(R.string.whats_your_mood_like_today).uppercase(),
                 fontSize = 30.sp,
