@@ -67,7 +67,7 @@ class MonthlyStatsActivity : ComponentActivity() {
 fun MonthlyStatsScreen(activity: Activity) {
     var month by remember { mutableStateOf(LocalDate.now().month) }
 
-    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+    Scaffold(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) { innerPadding ->
         Column (Modifier.padding(innerPadding)) {
             CustomAppBar(
                 onBackClick = {

@@ -17,7 +17,9 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -71,10 +73,10 @@ fun MainScreen() {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column (
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
             modifier = Modifier.padding(innerPadding)
                 .fillMaxSize()
                 .background(selectedEmotion.value.color)
+                .verticalScroll(rememberScrollState())
         ) {
             CustomAppBar(
                 contentColor = selectedEmotion.value.textColor
@@ -85,13 +87,13 @@ fun MainScreen() {
                 fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 color = selectedEmotion.value.textColor,
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier
             )
             Text(
                 text = formattedDate,
                 fontSize = 20.sp,
                 color = selectedEmotion.value.textColor,
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier
             )
 
             Spacer(modifier = Modifier.size(16.dp))
@@ -99,7 +101,7 @@ fun MainScreen() {
             val halfSize = emotions.size / 2
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier
             ) {
                 emotions.take(halfSize).forEach { emotion ->
                     EmotionItem(emotion, selectedEmotion.value == emotion) {
@@ -108,9 +110,10 @@ fun MainScreen() {
                     Spacer(modifier = Modifier.size(8.dp))
                 }
             }
+            Spacer(modifier = Modifier.size(8.dp))
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier
             ) {
                 emotions.drop(halfSize).forEach { emotion ->
                     EmotionItem(emotion, selectedEmotion.value == emotion) {
