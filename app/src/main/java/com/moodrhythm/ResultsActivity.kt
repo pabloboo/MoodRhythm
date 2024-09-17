@@ -53,6 +53,7 @@ import java.util.Locale
 class ResultsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.Theme_MoodRhythm)
         enableEdgeToEdge()
         setContent {
             MoodRhythmTheme {

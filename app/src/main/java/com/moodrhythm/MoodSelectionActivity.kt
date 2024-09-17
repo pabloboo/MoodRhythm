@@ -49,6 +49,7 @@ import java.time.format.DateTimeFormatter
 class MoodSelectionActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.Theme_MoodRhythm)
         enableEdgeToEdge()
         setContent {
             MoodRhythmTheme {

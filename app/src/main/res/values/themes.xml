@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
+    <style name="Theme.MoodRhythm.SplashScreen" parent="Theme.MoodRhythm">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
 
     <style name="Theme.MoodRhythm" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>
