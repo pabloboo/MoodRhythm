@@ -49,14 +49,10 @@ fun PieChart(
         floatValue.add(index, 360 * values.toFloat() / totalSum.toFloat())
     }
 
-    val colors = listOf(
-        data.keys.elementAt(0).color,
-        data.keys.elementAt(1).color,
-        data.keys.elementAt(2).color,
-        data.keys.elementAt(3).color,
-        data.keys.elementAt(4).color,
-        data.keys.elementAt(5).color
-    )
+    val colors = mutableListOf<Color>()
+    for (i in 0 until data.size) {
+        colors.add(data.keys.elementAt(i).color)
+    }
 
     var animationPlayed by remember { mutableStateOf(false) }
 
