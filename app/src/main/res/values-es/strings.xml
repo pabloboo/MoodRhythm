@@ -14,4 +14,12 @@
     <string name="check_your_mood_playlist">Escucha tu lista de reproducción según tu estado de ánimo</string>
     <string name="last_week_mood_history">Historial de tu estado de ánimo de la última semana</string>
     <string name="yearly_stats">Estadísticas anuales</string>
+    <string name="monthly_stats">Estadísticas mensuales</string>
+    <string name="sunday">D</string>
+    <string name="monday">L</string>
+    <string name="tuesday">M</string>
+    <string name="wednesday">M</string>
+    <string name="thursday">J</string>
+    <string name="friday">V</string>
+    <string name="saturday">S</string>
 </resources>

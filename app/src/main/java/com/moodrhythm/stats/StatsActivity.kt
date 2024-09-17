@@ -56,6 +56,11 @@ fun StatsScreen(activity: Activity) {
                 title = R.string.yearly_stats,
                 onClick = { yearlyStatsClick(activity) }
             )
+            StatsTitleCard(
+                modifier = Modifier,
+                title = R.string.monthly_stats,
+                onClick = { monthlyStatsClick(activity) }
+            )
         }
     }
 }
@@ -82,6 +87,11 @@ fun StatsTitleCard(modifier: Modifier ,title: Int, onClick: () -> Unit) {
 
 fun yearlyStatsClick(activity: Activity) {
     val intent = Intent(activity, YearlyStatsActivity::class.java)
+    activity.startActivity(intent)
+}
+
+fun monthlyStatsClick(activity: Activity) {
+    val intent = Intent(activity, MonthlyStatsActivity::class.java)
     activity.startActivity(intent)
 }
 
