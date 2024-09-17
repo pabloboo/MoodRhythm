@@ -21,4 +21,6 @@
     <string name="thursday">T</string>
     <string name="friday">F</string>
     <string name="saturday">S</string>
+    <string name="pie_chart">Pie chart</string>
+    <string name="dot_chart">Dot chart</string>
 </resources>

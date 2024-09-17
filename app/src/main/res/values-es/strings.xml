@@ -22,4 +22,6 @@
     <string name="thursday">J</string>
     <string name="friday">V</string>
     <string name="saturday">S</string>
+    <string name="pie_chart">Gráfico circular</string>
+    <string name="dot_chart">Gráfico de puntos</string>
 </resources>

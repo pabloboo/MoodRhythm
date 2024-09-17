@@ -17,12 +17,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,12 +38,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.moodrhythm.R
+import com.moodrhythm.model.Emotion
 import com.moodrhythm.ui.theme.MoodRhythmTheme
 import com.moodrhythm.utils.CustomAppBar
+import com.moodrhythm.utils.PieChart
 import com.moodrhythm.utils.SharedPrefsConstants
 import com.moodrhythm.utils.getCurrentYear
 import com.moodrhythm.utils.getSharedPreferencesLocale
 import com.moodrhythm.utils.getYearlyMoodData
+import java.time.LocalDate
 import java.time.Month
 import java.util.Locale
 
@@ -55,8 +65,12 @@ class YearlyStatsActivity : ComponentActivity() {
 
 @Composable
 fun YearlyStatsScreen(activity: Activity) {
+    val context = LocalContext.current
+    val moodData = getYearlyMoodData(context)
+    var shownGraph by remember { mutableStateOf(0) }
+
     Scaffold(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) { innerPadding ->
-        Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+        Column(modifier = Modifier.verticalScroll(rememberScrollState()).padding(innerPadding)) {
             CustomAppBar(
                 onBackClick = {
                     val intent = Intent(activity, StatsActivity::class.java)
@@ -71,17 +85,45 @@ fun YearlyStatsScreen(activity: Activity) {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(16.dp).align(Alignment.CenterHorizontally)
             )
-            MoodGrid(
-                context = LocalContext.current,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+            Spacer(modifier = Modifier.size(10.dp))
+            Row (modifier = Modifier.align(Alignment.CenterHorizontally)) { // buttons for switching between charts
+                if (shownGraph == 0) {
+                    Button(onClick = { shownGraph = 0 }, colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary)) {
+                        Text(text = context.getString(R.string.pie_chart))
+                    }
+                } else {
+                    Button(onClick = { shownGraph = 0 }, colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surface, contentColor = MaterialTheme.colorScheme.onSurface)) {
+                        Text(text = context.getString(R.string.pie_chart))
+                    }
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                if (shownGraph == 1) {
+                    Button(onClick = { shownGraph = 1 }, colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary)) {
+                        Text(text = context.getString(R.string.dot_chart))
+                    }
+                } else {
+                    Button(onClick = { shownGraph = 1 }, colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surface, contentColor = MaterialTheme.colorScheme.onSurface)) {
+                        Text(text = context.getString(R.string.dot_chart))
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.size(20.dp))
+            if (shownGraph == 0) {
+                MoodPieChart(
+                    moodData = moodData
+                )
+            } else if (shownGraph == 1) {
+                MoodGrid(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    moodData = moodData
+                )
+            }
         }
     }
 }
 
 @Composable
-fun MoodGrid(context: Context, modifier: Modifier) {
-    val moodData = getYearlyMoodData(context)
+fun MoodGrid(modifier: Modifier, moodData: List<Pair<LocalDate, Emotion>>) {
     val grid = Array(12) { Array(31) { Color.Transparent } }
 
     moodData.forEach { (date, emotion) ->
@@ -90,37 +132,33 @@ fun MoodGrid(context: Context, modifier: Modifier) {
         grid[month][day] = emotion.color
     }
 
-    LazyColumn(modifier = modifier) {
-        item {
-            Row (
-                modifier = Modifier,
-            ){
-                Spacer(modifier = Modifier.width(16.dp))
-                repeat(12) { month ->
-                    Text(
-                        modifier = Modifier.width(16.dp),
-                        text = getMonthInitial(month+1, LocalContext.current),
-                        fontSize = 8.sp,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        textAlign = TextAlign.Center
-                    )
-                }
+    Column(modifier = modifier) {
+        Row (
+            modifier = Modifier,
+        ){
+            Spacer(modifier = Modifier.width(16.dp))
+            repeat(12) { month ->
+                Text(
+                    modifier = Modifier.width(16.dp),
+                    text = getMonthInitial(month+1, LocalContext.current),
+                    fontSize = 8.sp,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center
+                )
             }
         }
-        items(31) { day ->
-            LazyRow (
+        for (day in 0..30) {
+            Row (
                 verticalAlignment = Alignment.Top,
             ) {
-                item {
-                    Text(
-                        modifier = Modifier.size(16.dp),
-                        text = (day+1).toString(),
-                        fontSize = 6.sp,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        textAlign = TextAlign.Center
-                    )
-                }
-                items(12) { month ->
+                Text(
+                    modifier = Modifier.size(16.dp),
+                    text = (day+1).toString(),
+                    fontSize = 6.sp,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center
+                )
+                for (month in 0..11) {
                     Box(
                         modifier = Modifier
                             .size(16.dp)
@@ -134,6 +172,12 @@ fun MoodGrid(context: Context, modifier: Modifier) {
     }
 }
 
+@Composable
+fun MoodPieChart(moodData: List<Pair<LocalDate, Emotion>>) {
+    val data = moodData.groupBy { it.second }.mapValues { it.value.size }
+    PieChart(data = data)
+}
+
 fun getMonthInitial(monthNumber: Int, context: Context): String {
     val localeStr = getSharedPreferencesLocale(context, SharedPrefsConstants.LANGUAGE)
     val month = Month.of(monthNumber)
@@ -143,7 +187,7 @@ fun getMonthInitial(monthNumber: Int, context: Context): String {
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview2() {
+fun YearlyStatsPreview() {
     MoodRhythmTheme {
         YearlyStatsScreen(YearlyStatsActivity())
     }
