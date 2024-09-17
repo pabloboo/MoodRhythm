@@ -5,6 +5,7 @@ import android.content.Context
 import com.moodrhythm.model.Emotion
 import com.moodrhythm.model.findEmotionById
 import java.time.LocalDate
+import java.time.Month
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -12,15 +13,23 @@ fun getCurrentYear(): Int {
     return LocalDate.now().year
 }
 
-fun getCurrentMonth(activity: Activity): String {
-    val month = LocalDate.now().month.getDisplayName(java.time.format.TextStyle.FULL, Locale(getSharedPreferencesLocale(activity, SharedPrefsConstants.LANGUAGE)))
-    return month[0].uppercase() + month.substring(1)
+fun getMonthName(activity: Activity, month: Month): String {
+    val monthName = month.getDisplayName(java.time.format.TextStyle.FULL, Locale(getSharedPreferencesLocale(activity, SharedPrefsConstants.LANGUAGE)))
+    return monthName[0].uppercase() + monthName.substring(1)
 }
 
-fun getMonthlyMoodData(context: Context): List<Pair<LocalDate, Emotion>> {
+fun previousMonth(month: Month): Month {
+    return month.minus(1)
+}
+
+fun nextMonth(month: Month): Month {
+    return month.plus(1)
+}
+
+fun getMonthlyMoodData(context: Context, month: Month): List<Pair<LocalDate, Emotion>> {
     val monthlyMoodData = ArrayList<Pair<LocalDate, Emotion>>()
     val currentYear = LocalDate.now().year
-    val currentMonth = LocalDate.now().month
+    val currentMonth = month.value
     val startDate = LocalDate.of(currentYear, currentMonth, 1)
     val endDate = LocalDate.of(currentYear, currentMonth, startDate.lengthOfMonth())
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
