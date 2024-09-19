@@ -27,8 +27,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -62,37 +62,37 @@ class MoodSelectionActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen() {
+fun MainScreen(viewModel: MoodSelectionViewModel = MoodSelectionViewModel()) {
     val today = LocalDate.now()
     val formatter = DateTimeFormatter.ofPattern("d MMMM")
     val formattedDate = today.format(formatter)
 
     val context = LocalContext.current
-    val selectedEmotion = remember { mutableStateOf(emotions[0]) }
+    val selectedEmotion by viewModel.selectedEmotion.collectAsState()
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column (
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(innerPadding)
                 .fillMaxSize()
-                .background(selectedEmotion.value.color)
+                .background(selectedEmotion.color)
                 .verticalScroll(rememberScrollState())
         ) {
             CustomAppBar(
-                contentColor = selectedEmotion.value.textColor
+                contentColor = selectedEmotion.textColor
             )
             Text(
                 text = LocalContext.current.getString(R.string.whats_your_mood_like_today).uppercase(),
                 fontSize = 30.sp,
                 fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                color = selectedEmotion.value.textColor,
+                color = selectedEmotion.textColor,
                 modifier = Modifier
             )
             Text(
                 text = formattedDate,
                 fontSize = 20.sp,
-                color = selectedEmotion.value.textColor,
+                color = selectedEmotion.textColor,
                 modifier = Modifier
             )
 
@@ -104,8 +104,8 @@ fun MainScreen() {
                 modifier = Modifier
             ) {
                 emotions.take(halfSize).forEach { emotion ->
-                    EmotionItem(emotion, selectedEmotion.value == emotion) {
-                        selectedEmotion.value = emotion
+                    EmotionItem(emotion, selectedEmotion == emotion) {
+                        viewModel.selectEmotion(emotion)
                     }
                     Spacer(modifier = Modifier.size(8.dp))
                 }
@@ -116,15 +116,15 @@ fun MainScreen() {
                 modifier = Modifier
             ) {
                 emotions.drop(halfSize).forEach { emotion ->
-                    EmotionItem(emotion, selectedEmotion.value == emotion) {
-                        selectedEmotion.value = emotion
+                    EmotionItem(emotion, selectedEmotion == emotion) {
+                        viewModel.selectEmotion(emotion)
                     }
                     Spacer(modifier = Modifier.size(8.dp))
                 }
             }
 
             Image(
-                painter = painterResource(selectedEmotion.value.imageId),
+                painter = painterResource(selectedEmotion.imageId),
                 contentDescription = "Selected emotion icon",
                 modifier = Modifier.size(200.dp)
             )
@@ -134,7 +134,7 @@ fun MainScreen() {
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surface),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface),
                 onClick = {
-                    setSharedPreferencesValueInt(context, getCurrentDayEmotionIdKey(), selectedEmotion.value.id)
+                    setSharedPreferencesValueInt(context, getCurrentDayEmotionIdKey(), selectedEmotion.id)
                     val intent = Intent(context, ResultsActivity::class.java)
                     context.startActivity(intent)
                 }) {
