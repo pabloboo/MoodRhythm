@@ -25,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.getString
 import com.moodrhythm.R
+import com.moodrhythm.model.Emotion
 import com.moodrhythm.ui.theme.MoodRhythmTheme
 import com.moodrhythm.utils.CustomAppBar
 import com.moodrhythm.utils.getMonthName
@@ -102,7 +104,10 @@ fun MonthlyStatsScreen(activity: Activity) {
 
 @Composable
 fun MoodMonthlyVisualizer(context: Context, modifier: Modifier = Modifier, month: Month) {
-    val monthlyData = getMonthlyMoodData(context, month)
+    var monthlyData by remember { mutableStateOf<List<Pair<LocalDate, Emotion>>>(emptyList()) }
+    LaunchedEffect(month) { // Update the data when the month changes
+        monthlyData = getMonthlyMoodData(context, month)
+    }
     val grid = Array(6) { Array(7) { 0 } } // Maximum 6 weeks in a month
     val daysOfWeek = listOf(
         getString(context, R.string.monday),

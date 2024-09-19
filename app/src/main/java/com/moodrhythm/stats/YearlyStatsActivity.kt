@@ -25,7 +25,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -66,8 +68,11 @@ class YearlyStatsActivity : ComponentActivity() {
 @Composable
 fun YearlyStatsScreen(activity: Activity) {
     val context = LocalContext.current
-    val moodData = getYearlyMoodData(context)
-    var shownGraph by remember { mutableStateOf(0) }
+    var moodData by remember { mutableStateOf<List<Pair<LocalDate, Emotion>>>(emptyList()) }
+    LaunchedEffect(Unit) {
+        moodData = getYearlyMoodData(context)
+    }
+    var shownGraph by remember { mutableIntStateOf(0) }
 
     Scaffold(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) { innerPadding ->
         Column(modifier = Modifier.verticalScroll(rememberScrollState()).padding(innerPadding)) {

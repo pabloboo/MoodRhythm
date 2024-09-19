@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import com.moodrhythm.model.Emotion
 import com.moodrhythm.model.findEmotionById
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.Month
 import java.time.format.DateTimeFormatter
@@ -26,7 +28,7 @@ fun nextMonth(month: Month): Month {
     return month.plus(1)
 }
 
-fun getMonthlyMoodData(context: Context, month: Month): List<Pair<LocalDate, Emotion>> {
+suspend fun getMonthlyMoodData(context: Context, month: Month): List<Pair<LocalDate, Emotion>> = withContext(Dispatchers.IO) {
     val monthlyMoodData = ArrayList<Pair<LocalDate, Emotion>>()
     val currentYear = LocalDate.now().year
     val currentMonth = month.value
@@ -45,10 +47,10 @@ fun getMonthlyMoodData(context: Context, month: Month): List<Pair<LocalDate, Emo
         date = date.plusDays(1)
     }
 
-    return monthlyMoodData
+    return@withContext monthlyMoodData
 }
 
-fun getYearlyMoodData(context: Context): List<Pair<LocalDate, Emotion>> {
+suspend fun getYearlyMoodData(context: Context): List<Pair<LocalDate, Emotion>> = withContext(Dispatchers.IO) {
     val yearlyMoodData = ArrayList<Pair<LocalDate, Emotion>>()
     val currentYear = LocalDate.now().year
     val startDate = LocalDate.of(currentYear, 1, 1)
@@ -66,5 +68,5 @@ fun getYearlyMoodData(context: Context): List<Pair<LocalDate, Emotion>> {
         date = date.plusDays(1)
     }
 
-    return yearlyMoodData
+    return@withContext yearlyMoodData
 }
