@@ -43,33 +43,38 @@ import com.moodrhythm.model.findEmotionById
 import com.moodrhythm.stats.StatsActivity
 import com.moodrhythm.ui.theme.MoodRhythmTheme
 import com.moodrhythm.utils.CustomAppBar
+import com.moodrhythm.utils.MockSharedPreferences
+import com.moodrhythm.utils.SharedPreferencesHelper
 import com.moodrhythm.utils.SharedPrefsConstants
-import com.moodrhythm.utils.getCurrentDayEmotionIdKey
-import com.moodrhythm.utils.getSharedPreferencesLocale
-import com.moodrhythm.utils.getSharedPreferencesValueInt
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ResultsActivity : ComponentActivity() {
+    @Inject
+    lateinit var sharedPreferencesHelper: SharedPreferencesHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_MoodRhythm)
         enableEdgeToEdge()
         setContent {
             MoodRhythmTheme {
-                ResultsScreen()
+                ResultsScreen(sharedPreferencesHelper)
             }
         }
     }
 }
 
 @Composable
-fun ResultsScreen() {
+fun ResultsScreen(sharedPreferencesHelper: SharedPreferencesHelper) {
     val context = LocalContext.current
-    val emotionId = getSharedPreferencesValueInt(context, getCurrentDayEmotionIdKey())
+    val emotionId = sharedPreferencesHelper.getSharedPreferencesValueInt(sharedPreferencesHelper.getCurrentDayEmotionIdKey())
     val emotion = findEmotionById(emotionId)
-    val moodHistory = getMoodHistory(context)
+    val moodHistory = getMoodHistory(context, sharedPreferencesHelper)
 
     BackHandler (enabled = true) {
         // Don't allow back navigation
@@ -179,20 +184,20 @@ fun MoodHistoryItem(entry: Pair<String, Emotion>) {
 }
 
 // Function to get the mood history of the last week
-fun getMoodHistory(context: Context): List<Pair<String, Emotion>> {
+fun getMoodHistory(context: Context, sharedPreferencesHelper: SharedPreferencesHelper): List<Pair<String, Emotion>> {
     val moodHistory = ArrayList<Pair<String, Emotion>>()
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     var date = LocalDate.now().minusDays(6)
 
     repeat(7) {
         val key = SharedPrefsConstants.CURRENT_DAY_EMOTION_ID + "-" + date.format(formatter)
-        val moodId = getSharedPreferencesValueInt(context, key)
+        val moodId = sharedPreferencesHelper.getSharedPreferencesValueInt(key)
         if (moodId != -1) {
             val dayOfWeek: String
-            if (key == getCurrentDayEmotionIdKey()) {
+            if (key == sharedPreferencesHelper.getCurrentDayEmotionIdKey()) {
                 dayOfWeek = context.getString(R.string.today).uppercase()
             } else {
-                val locale = getSharedPreferencesLocale(context, SharedPrefsConstants.LANGUAGE)
+                val locale = sharedPreferencesHelper.getSharedPreferencesLocale(SharedPrefsConstants.LANGUAGE)
                 dayOfWeek = date.dayOfWeek.getDisplayName(java.time.format.TextStyle.FULL, Locale(locale)).uppercase()
             }
             val mood = findEmotionById(moodId)
@@ -207,7 +212,10 @@ fun getMoodHistory(context: Context): List<Pair<String, Emotion>> {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
+    val mockSharedPreferences = MockSharedPreferences()
+    val sharedPreferencesHelper = SharedPreferencesHelper(mockSharedPreferences)
+
     MoodRhythmTheme {
-        ResultsScreen()
+        ResultsScreen(sharedPreferencesHelper)
     }
 }

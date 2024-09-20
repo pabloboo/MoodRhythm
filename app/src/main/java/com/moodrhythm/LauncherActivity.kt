@@ -4,19 +4,24 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.text.intl.Locale
+import com.moodrhythm.utils.SharedPreferencesHelper
 import com.moodrhythm.utils.SharedPrefsConstants
-import com.moodrhythm.utils.getCurrentDayEmotionIdKey
-import com.moodrhythm.utils.getSharedPreferencesValueInt
-import com.moodrhythm.utils.setSharedPreferencesValueString
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LauncherActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var sharedPreferencesHelper: SharedPreferencesHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val locale = Locale.current.language
-        setSharedPreferencesValueString(this, SharedPrefsConstants.LANGUAGE, locale)
+        sharedPreferencesHelper.setSharedPreferencesValueString(SharedPrefsConstants.LANGUAGE, locale)
 
-        if (getSharedPreferencesValueInt(this, getCurrentDayEmotionIdKey()) == -1) {
+        if (sharedPreferencesHelper.getSharedPreferencesValueInt(sharedPreferencesHelper.getCurrentDayEmotionIdKey()) == -1) {
             val intent = Intent(this, MoodSelectionActivity::class.java)
             startActivity(intent)
         } else {

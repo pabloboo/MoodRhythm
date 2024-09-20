@@ -46,27 +46,34 @@ import com.moodrhythm.R
 import com.moodrhythm.model.Emotion
 import com.moodrhythm.ui.theme.MoodRhythmTheme
 import com.moodrhythm.utils.CustomAppBar
-import com.moodrhythm.utils.getMonthName
-import com.moodrhythm.utils.getMonthlyMoodData
-import com.moodrhythm.utils.nextMonth
-import com.moodrhythm.utils.previousMonth
+import com.moodrhythm.utils.MockSharedPreferences
+import com.moodrhythm.utils.SharedPreferencesHelper
+import com.moodrhythm.utils.StatsFunctions
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.Month
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MonthlyStatsActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var sharedPreferencesHelper: SharedPreferencesHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             MoodRhythmTheme {
-                MonthlyStatsScreen(this)
+                MonthlyStatsScreen(this, sharedPreferencesHelper)
             }
         }
     }
 }
 
 @Composable
-fun MonthlyStatsScreen(activity: Activity) {
+fun MonthlyStatsScreen(activity: Activity, sharedPreferencesHelper: SharedPreferencesHelper) {
+    val statsFunctions = StatsFunctions(sharedPreferencesHelper)
     var month by remember { mutableStateOf(LocalDate.now().month) }
 
     Scaffold(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) { innerPadding ->
@@ -78,23 +85,24 @@ fun MonthlyStatsScreen(activity: Activity) {
                 }
             )
             Row (modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)) {
-                IconButton(onClick = { month = previousMonth(month) }) {
-                    Icon(imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left), contentDescription = "Left arrow icon")
+                IconButton(onClick = { month = statsFunctions.previousMonth(month) }) {
+                    Icon(imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left), contentDescription = "Left arrow icon", Modifier.size(50.dp))
                 }
                 Text(
-                    text = getMonthName(activity, month),
+                    text = statsFunctions.getMonthName(month),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(16.dp).weight(1f)
                 )
-                IconButton(onClick = { month = nextMonth(month) }) {
-                    Icon(imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_right), contentDescription = "Right arrow icon")
+                IconButton(onClick = { month = statsFunctions.nextMonth(month) }) {
+                    Icon(imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_right), contentDescription = "Right arrow icon", Modifier.size(50.dp))
                 }
             }
             MoodMonthlyVisualizer(
                 context = LocalContext.current,
+                sharedPreferencesHelper = sharedPreferencesHelper,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 month = month
             )
@@ -103,10 +111,12 @@ fun MonthlyStatsScreen(activity: Activity) {
 }
 
 @Composable
-fun MoodMonthlyVisualizer(context: Context, modifier: Modifier = Modifier, month: Month) {
+fun MoodMonthlyVisualizer(context: Context, sharedPreferencesHelper: SharedPreferencesHelper, modifier: Modifier = Modifier, month: Month) {
+    val statsFunctions = StatsFunctions(sharedPreferencesHelper)
     var monthlyData by remember { mutableStateOf<List<Pair<LocalDate, Emotion>>>(emptyList()) }
+
     LaunchedEffect(month) { // Update the data when the month changes
-        monthlyData = getMonthlyMoodData(context, month)
+        monthlyData = statsFunctions.getMonthlyMoodData(month)
     }
     val grid = Array(6) { Array(7) { 0 } } // Maximum 6 weeks in a month
     val daysOfWeek = listOf(
@@ -161,7 +171,9 @@ fun MoodMonthlyVisualizer(context: Context, modifier: Modifier = Modifier, month
 @Preview(showBackground = true)
 @Composable
 fun MonthlyStatsPreview() {
+    val mockSharedPreferences = MockSharedPreferences()
+    val sharedPreferencesHelper = SharedPreferencesHelper(mockSharedPreferences)
     MoodRhythmTheme {
-        MonthlyStatsScreen(MonthlyStatsActivity())
+        MonthlyStatsScreen(MonthlyStatsActivity(), sharedPreferencesHelper)
     }
 }

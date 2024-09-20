@@ -1,7 +1,6 @@
 package com.moodrhythm.stats
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -44,33 +43,40 @@ import com.moodrhythm.R
 import com.moodrhythm.model.Emotion
 import com.moodrhythm.ui.theme.MoodRhythmTheme
 import com.moodrhythm.utils.CustomAppBar
+import com.moodrhythm.utils.MockSharedPreferences
 import com.moodrhythm.utils.PieChart
+import com.moodrhythm.utils.SharedPreferencesHelper
 import com.moodrhythm.utils.SharedPrefsConstants
-import com.moodrhythm.utils.getCurrentYear
-import com.moodrhythm.utils.getSharedPreferencesLocale
-import com.moodrhythm.utils.getYearlyMoodData
+import com.moodrhythm.utils.StatsFunctions
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.Month
 import java.util.Locale
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class YearlyStatsActivity : ComponentActivity() {
+    @Inject
+    lateinit var sharedPreferencesHelper: SharedPreferencesHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             MoodRhythmTheme {
-                YearlyStatsScreen(this)
+                YearlyStatsScreen(this, sharedPreferencesHelper)
             }
         }
     }
 }
 
 @Composable
-fun YearlyStatsScreen(activity: Activity) {
+fun YearlyStatsScreen(activity: Activity, sharedPreferencesHelper: SharedPreferencesHelper) {
     val context = LocalContext.current
+    val statsFunctions = StatsFunctions(sharedPreferencesHelper)
     var moodData by remember { mutableStateOf<List<Pair<LocalDate, Emotion>>>(emptyList()) }
     LaunchedEffect(Unit) {
-        moodData = getYearlyMoodData(context)
+        moodData = statsFunctions.getYearlyMoodData()
     }
     var shownGraph by remember { mutableIntStateOf(0) }
 
@@ -83,7 +89,7 @@ fun YearlyStatsScreen(activity: Activity) {
                 }
             )
             Text(
-                text = getCurrentYear().toString(),
+                text = statsFunctions.getCurrentYear().toString(),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -120,7 +126,8 @@ fun YearlyStatsScreen(activity: Activity) {
             } else if (shownGraph == 1) {
                 MoodGrid(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
-                    moodData = moodData
+                    moodData = moodData,
+                    sharedPreferencesHelper = sharedPreferencesHelper
                 )
             }
         }
@@ -128,7 +135,7 @@ fun YearlyStatsScreen(activity: Activity) {
 }
 
 @Composable
-fun MoodGrid(modifier: Modifier, moodData: List<Pair<LocalDate, Emotion>>) {
+fun MoodGrid(modifier: Modifier, moodData: List<Pair<LocalDate, Emotion>>, sharedPreferencesHelper: SharedPreferencesHelper) {
     val grid = Array(12) { Array(31) { Color.Transparent } }
 
     moodData.forEach { (date, emotion) ->
@@ -145,7 +152,7 @@ fun MoodGrid(modifier: Modifier, moodData: List<Pair<LocalDate, Emotion>>) {
             repeat(12) { month ->
                 Text(
                     modifier = Modifier.width(16.dp),
-                    text = getMonthInitial(month+1, LocalContext.current),
+                    text = getMonthInitial(month+1, sharedPreferencesHelper),
                     fontSize = 8.sp,
                     color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Center
@@ -183,8 +190,8 @@ fun MoodPieChart(moodData: List<Pair<LocalDate, Emotion>>) {
     PieChart(data = data)
 }
 
-fun getMonthInitial(monthNumber: Int, context: Context): String {
-    val localeStr = getSharedPreferencesLocale(context, SharedPrefsConstants.LANGUAGE)
+fun getMonthInitial(monthNumber: Int, sharedPreferencesHelper: SharedPreferencesHelper): String {
+    val localeStr = sharedPreferencesHelper.getSharedPreferencesLocale(SharedPrefsConstants.LANGUAGE)
     val month = Month.of(monthNumber)
     val monthName = month.getDisplayName(java.time.format.TextStyle.FULL, Locale(localeStr))
     return monthName[0].uppercase()
@@ -193,7 +200,10 @@ fun getMonthInitial(monthNumber: Int, context: Context): String {
 @Preview(showBackground = true)
 @Composable
 fun YearlyStatsPreview() {
+    val mockSharedPreferences = MockSharedPreferences()
+    val sharedPreferencesHelper = SharedPreferencesHelper(mockSharedPreferences)
+
     MoodRhythmTheme {
-        YearlyStatsScreen(YearlyStatsActivity())
+        YearlyStatsScreen(YearlyStatsActivity(), sharedPreferencesHelper)
     }
 }

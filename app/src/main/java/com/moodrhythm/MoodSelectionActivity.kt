@@ -43,26 +43,32 @@ import com.moodrhythm.model.Emotion
 import com.moodrhythm.model.emotions
 import com.moodrhythm.ui.theme.MoodRhythmTheme
 import com.moodrhythm.utils.CustomAppBar
-import com.moodrhythm.utils.getCurrentDayEmotionIdKey
-import com.moodrhythm.utils.setSharedPreferencesValueInt
+import com.moodrhythm.utils.MockSharedPreferences
+import com.moodrhythm.utils.SharedPreferencesHelper
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MoodSelectionActivity : ComponentActivity() {
+    @Inject
+    lateinit var sharedPreferencesHelper: SharedPreferencesHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_MoodRhythm)
         enableEdgeToEdge()
         setContent {
             MoodRhythmTheme {
-                MainScreen()
+                MainScreen(sharedPreferencesHelper = sharedPreferencesHelper)
             }
         }
     }
 }
 
 @Composable
-fun MainScreen(viewModel: MoodSelectionViewModel = MoodSelectionViewModel()) {
+fun MainScreen(viewModel: MoodSelectionViewModel = MoodSelectionViewModel(), sharedPreferencesHelper: SharedPreferencesHelper) {
     val today = LocalDate.now()
     val formatter = DateTimeFormatter.ofPattern("d MMMM")
     val formattedDate = today.format(formatter)
@@ -134,7 +140,7 @@ fun MainScreen(viewModel: MoodSelectionViewModel = MoodSelectionViewModel()) {
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surface),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface),
                 onClick = {
-                    setSharedPreferencesValueInt(context, getCurrentDayEmotionIdKey(), selectedEmotion.id)
+                    sharedPreferencesHelper.setSharedPreferencesValueInt(sharedPreferencesHelper.getCurrentDayEmotionIdKey(), selectedEmotion.id)
                     val intent = Intent(context, ResultsActivity::class.java)
                     context.startActivity(intent)
                 }) {
@@ -173,7 +179,9 @@ fun EmotionItem(emotion: Emotion, isSelected: Boolean, onSelected: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewMainScreen() {
+    val mockSharedPreferences = MockSharedPreferences()
+    val sharedPreferencesHelper = SharedPreferencesHelper(mockSharedPreferences)
     MoodRhythmTheme {
-        MainScreen()
+        MainScreen(sharedPreferencesHelper = sharedPreferencesHelper)
     }
 }
