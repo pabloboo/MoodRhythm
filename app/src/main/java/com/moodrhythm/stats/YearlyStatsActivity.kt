@@ -45,8 +45,9 @@ import com.moodrhythm.ui.theme.MoodRhythmTheme
 import com.moodrhythm.utils.CustomAppBar
 import com.moodrhythm.utils.MockSharedPreferences
 import com.moodrhythm.utils.PieChart
-import com.moodrhythm.utils.SharedPreferencesHelper
 import com.moodrhythm.utils.SharedPrefsConstants
+import com.moodrhythm.utils.SharedPrefsHelper
+import com.moodrhythm.utils.SharedPrefsHelperImpl
 import com.moodrhythm.utils.StatsFunctions
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
@@ -57,7 +58,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class YearlyStatsActivity : ComponentActivity() {
     @Inject
-    lateinit var sharedPreferencesHelper: SharedPreferencesHelper
+    lateinit var sharedPreferencesHelper: SharedPrefsHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +72,7 @@ class YearlyStatsActivity : ComponentActivity() {
 }
 
 @Composable
-fun YearlyStatsScreen(activity: Activity, sharedPreferencesHelper: SharedPreferencesHelper) {
+fun YearlyStatsScreen(activity: Activity, sharedPreferencesHelper: SharedPrefsHelper) {
     val context = LocalContext.current
     val statsFunctions = StatsFunctions(sharedPreferencesHelper)
     var moodData by remember { mutableStateOf<List<Pair<LocalDate, Emotion>>>(emptyList()) }
@@ -135,7 +136,7 @@ fun YearlyStatsScreen(activity: Activity, sharedPreferencesHelper: SharedPrefere
 }
 
 @Composable
-fun MoodGrid(modifier: Modifier, moodData: List<Pair<LocalDate, Emotion>>, sharedPreferencesHelper: SharedPreferencesHelper) {
+fun MoodGrid(modifier: Modifier, moodData: List<Pair<LocalDate, Emotion>>, sharedPreferencesHelper: SharedPrefsHelper) {
     val grid = Array(12) { Array(31) { Color.Transparent } }
 
     moodData.forEach { (date, emotion) ->
@@ -190,7 +191,7 @@ fun MoodPieChart(moodData: List<Pair<LocalDate, Emotion>>) {
     PieChart(data = data)
 }
 
-fun getMonthInitial(monthNumber: Int, sharedPreferencesHelper: SharedPreferencesHelper): String {
+fun getMonthInitial(monthNumber: Int, sharedPreferencesHelper: SharedPrefsHelper): String {
     val localeStr = sharedPreferencesHelper.getSharedPreferencesLocale(SharedPrefsConstants.LANGUAGE)
     val month = Month.of(monthNumber)
     val monthName = month.getDisplayName(java.time.format.TextStyle.FULL, Locale(localeStr))
@@ -201,7 +202,7 @@ fun getMonthInitial(monthNumber: Int, sharedPreferencesHelper: SharedPreferences
 @Composable
 fun YearlyStatsPreview() {
     val mockSharedPreferences = MockSharedPreferences()
-    val sharedPreferencesHelper = SharedPreferencesHelper(mockSharedPreferences)
+    val sharedPreferencesHelper = SharedPrefsHelperImpl(mockSharedPreferences)
 
     MoodRhythmTheme {
         YearlyStatsScreen(YearlyStatsActivity(), sharedPreferencesHelper)

@@ -44,7 +44,8 @@ import com.moodrhythm.model.emotions
 import com.moodrhythm.ui.theme.MoodRhythmTheme
 import com.moodrhythm.utils.CustomAppBar
 import com.moodrhythm.utils.MockSharedPreferences
-import com.moodrhythm.utils.SharedPreferencesHelper
+import com.moodrhythm.utils.SharedPrefsHelper
+import com.moodrhythm.utils.SharedPrefsHelperImpl
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -53,7 +54,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MoodSelectionActivity : ComponentActivity() {
     @Inject
-    lateinit var sharedPreferencesHelper: SharedPreferencesHelper
+    lateinit var sharedPreferencesHelper: SharedPrefsHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +69,7 @@ class MoodSelectionActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(viewModel: MoodSelectionViewModel = MoodSelectionViewModel(), sharedPreferencesHelper: SharedPreferencesHelper) {
+fun MainScreen(viewModel: MoodSelectionViewModel = MoodSelectionViewModel(), sharedPreferencesHelper: SharedPrefsHelper) {
     val today = LocalDate.now()
     val formatter = DateTimeFormatter.ofPattern("d MMMM")
     val formattedDate = today.format(formatter)
@@ -180,7 +181,7 @@ fun EmotionItem(emotion: Emotion, isSelected: Boolean, onSelected: () -> Unit) {
 @Composable
 fun PreviewMainScreen() {
     val mockSharedPreferences = MockSharedPreferences()
-    val sharedPreferencesHelper = SharedPreferencesHelper(mockSharedPreferences)
+    val sharedPreferencesHelper = SharedPrefsHelperImpl(mockSharedPreferences)
     MoodRhythmTheme {
         MainScreen(sharedPreferencesHelper = sharedPreferencesHelper)
     }

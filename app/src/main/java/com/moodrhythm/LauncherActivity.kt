@@ -4,8 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.text.intl.Locale
-import com.moodrhythm.utils.SharedPreferencesHelper
 import com.moodrhythm.utils.SharedPrefsConstants
+import com.moodrhythm.utils.SharedPrefsHelper
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -13,7 +13,7 @@ import javax.inject.Inject
 class LauncherActivity : ComponentActivity() {
 
     @Inject
-    lateinit var sharedPreferencesHelper: SharedPreferencesHelper
+    lateinit var sharedPreferencesHelper: SharedPrefsHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

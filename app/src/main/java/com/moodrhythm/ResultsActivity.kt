@@ -44,8 +44,9 @@ import com.moodrhythm.stats.StatsActivity
 import com.moodrhythm.ui.theme.MoodRhythmTheme
 import com.moodrhythm.utils.CustomAppBar
 import com.moodrhythm.utils.MockSharedPreferences
-import com.moodrhythm.utils.SharedPreferencesHelper
 import com.moodrhythm.utils.SharedPrefsConstants
+import com.moodrhythm.utils.SharedPrefsHelper
+import com.moodrhythm.utils.SharedPrefsHelperImpl
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -55,7 +56,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ResultsActivity : ComponentActivity() {
     @Inject
-    lateinit var sharedPreferencesHelper: SharedPreferencesHelper
+    lateinit var sharedPreferencesHelper: SharedPrefsHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +71,7 @@ class ResultsActivity : ComponentActivity() {
 }
 
 @Composable
-fun ResultsScreen(sharedPreferencesHelper: SharedPreferencesHelper) {
+fun ResultsScreen(sharedPreferencesHelper: SharedPrefsHelper) {
     val context = LocalContext.current
     val emotionId = sharedPreferencesHelper.getSharedPreferencesValueInt(sharedPreferencesHelper.getCurrentDayEmotionIdKey())
     val emotion = findEmotionById(emotionId)
@@ -184,7 +185,7 @@ fun MoodHistoryItem(entry: Pair<String, Emotion>) {
 }
 
 // Function to get the mood history of the last week
-fun getMoodHistory(context: Context, sharedPreferencesHelper: SharedPreferencesHelper): List<Pair<String, Emotion>> {
+fun getMoodHistory(context: Context, sharedPreferencesHelper: SharedPrefsHelper): List<Pair<String, Emotion>> {
     val moodHistory = ArrayList<Pair<String, Emotion>>()
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     var date = LocalDate.now().minusDays(6)
@@ -213,7 +214,7 @@ fun getMoodHistory(context: Context, sharedPreferencesHelper: SharedPreferencesH
 @Composable
 fun GreetingPreview() {
     val mockSharedPreferences = MockSharedPreferences()
-    val sharedPreferencesHelper = SharedPreferencesHelper(mockSharedPreferences)
+    val sharedPreferencesHelper = SharedPrefsHelperImpl(mockSharedPreferences)
 
     MoodRhythmTheme {
         ResultsScreen(sharedPreferencesHelper)

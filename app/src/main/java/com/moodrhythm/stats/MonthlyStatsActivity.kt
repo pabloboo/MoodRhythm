@@ -47,7 +47,8 @@ import com.moodrhythm.model.Emotion
 import com.moodrhythm.ui.theme.MoodRhythmTheme
 import com.moodrhythm.utils.CustomAppBar
 import com.moodrhythm.utils.MockSharedPreferences
-import com.moodrhythm.utils.SharedPreferencesHelper
+import com.moodrhythm.utils.SharedPrefsHelper
+import com.moodrhythm.utils.SharedPrefsHelperImpl
 import com.moodrhythm.utils.StatsFunctions
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
@@ -58,7 +59,7 @@ import javax.inject.Inject
 class MonthlyStatsActivity : ComponentActivity() {
 
     @Inject
-    lateinit var sharedPreferencesHelper: SharedPreferencesHelper
+    lateinit var sharedPreferencesHelper: SharedPrefsHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +73,7 @@ class MonthlyStatsActivity : ComponentActivity() {
 }
 
 @Composable
-fun MonthlyStatsScreen(activity: Activity, sharedPreferencesHelper: SharedPreferencesHelper) {
+fun MonthlyStatsScreen(activity: Activity, sharedPreferencesHelper: SharedPrefsHelper) {
     val statsFunctions = StatsFunctions(sharedPreferencesHelper)
     var month by remember { mutableStateOf(LocalDate.now().month) }
 
@@ -111,7 +112,7 @@ fun MonthlyStatsScreen(activity: Activity, sharedPreferencesHelper: SharedPrefer
 }
 
 @Composable
-fun MoodMonthlyVisualizer(context: Context, sharedPreferencesHelper: SharedPreferencesHelper, modifier: Modifier = Modifier, month: Month) {
+fun MoodMonthlyVisualizer(context: Context, sharedPreferencesHelper: SharedPrefsHelper, modifier: Modifier = Modifier, month: Month) {
     val statsFunctions = StatsFunctions(sharedPreferencesHelper)
     var monthlyData by remember { mutableStateOf<List<Pair<LocalDate, Emotion>>>(emptyList()) }
 
@@ -172,7 +173,7 @@ fun MoodMonthlyVisualizer(context: Context, sharedPreferencesHelper: SharedPrefe
 @Composable
 fun MonthlyStatsPreview() {
     val mockSharedPreferences = MockSharedPreferences()
-    val sharedPreferencesHelper = SharedPreferencesHelper(mockSharedPreferences)
+    val sharedPreferencesHelper = SharedPrefsHelperImpl(mockSharedPreferences)
     MoodRhythmTheme {
         MonthlyStatsScreen(MonthlyStatsActivity(), sharedPreferencesHelper)
     }

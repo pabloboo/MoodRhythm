@@ -11,7 +11,7 @@ import java.util.Locale
 import javax.inject.Inject
 
 class StatsFunctions @Inject constructor(
-    private val sharedPreferencesHelper: SharedPreferencesHelper
+    private val sharedPreferencesHelper: SharedPrefsHelper
 ) {
 
     fun getCurrentYear(): Int {
