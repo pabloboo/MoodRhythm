@@ -53,6 +53,8 @@ import com.moodrhythm.utils.StatsFunctions
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.Month
+import java.time.temporal.WeekFields
+import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -132,7 +134,8 @@ fun MoodMonthlyVisualizer(context: Context, sharedPreferencesHelper: SharedPrefs
 
     monthlyData.forEach { (date, emotion) ->
         val dayOfWeek = date.dayOfWeek.value - 1
-        val week = date.dayOfMonth / 7
+        val weekFields = WeekFields.of(Locale.getDefault())
+        val week = date.get(weekFields.weekOfMonth()) - 1
         grid[week][dayOfWeek] = emotion.imageId
     }
 
