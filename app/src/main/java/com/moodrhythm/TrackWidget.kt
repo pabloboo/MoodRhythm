@@ -74,7 +74,7 @@ object TrackWidget : GlanceAppWidget() {
                     )
                     Spacer(modifier = GlanceModifier.padding(4.dp))
                     Button(
-                        text = "Update",
+                        text = getString(context, R.string.update),
                         onClick = actionRunCallback<UpdateCallback>()
                     )
                 }

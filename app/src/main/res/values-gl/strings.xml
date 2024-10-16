@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mood Rhythm</string>
+    <string name="happy">Feliz</string>
+    <string name="sad">Triste</string>
+    <string name="calm">Tranquilo</string>
+    <string name="anxious">Ansioso</string>
+    <string name="excited">Emocionado</string>
+    <string name="tired">Canso</string>
+    <string name="whats_your_mood_like_today">Como te sintes hoxe?</string>
+    <string name="continueStr">Continuar</string>
+    <string name="your_are_feeling">Hoxe sénteste %1$s</string>
+    <string name="today">Hoxe</string>
+    <string name="check_your_mood_playlist">Escoita a túa lista de reprodución segundo o teu estado de ánimo</string>
+    <string name="last_week_mood_history">Historia do teu estado de ánimo da última semana</string>
+    <string name="yearly_stats">Estadísticas anuais</string>
+    <string name="monthly_stats">Estadísticas mensuais</string>
+    <string name="sunday">D</string>
+    <string name="monday">L</string>
+    <string name="tuesday">M</string>
+    <string name="wednesday">MC</string>
+    <string name="thursday">X</string>
+    <string name="friday">V</string>
+    <string name="saturday">S</string>
+    <string name="pie_chart">Gráfico circular</string>
+    <string name="dot_chart">Gráfico de puntos</string>
+    <string name="todays_mood_is">O mood de hoxe é</string>
+    <string name="save">Gardar</string>
+    <string name="write_your_thoughts">Escribe os teus pensamentos</string>
+    <string name="saved">Gardado</string>
+    <string name="journal">Diario</string>
+    <string name="update">Actualizar</string>
+</resources>
