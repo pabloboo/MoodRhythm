@@ -25,4 +25,8 @@
     <string name="pie_chart">Gráfico circular</string>
     <string name="dot_chart">Gráfico de puntos</string>
     <string name="todays_mood_is">El mood de hoy es</string>
+    <string name="save">Guardar</string>
+    <string name="write_your_thoughts">Escribe tus pensamientos</string>
+    <string name="saved">Guardado</string>
+    <string name="journal">Diario</string>
 </resources>

@@ -5,4 +5,5 @@ object SharedPrefsConstants {
 
     const val LANGUAGE = "language"
     const val CURRENT_DAY_EMOTION_ID = "current_day_emotion_id" // See also: SharedPrefsFunctions.getCurrentDayEmotionIdKey
+    const val JOURNAL_TEXT = "journal_text"
 }

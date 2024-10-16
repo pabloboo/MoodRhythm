@@ -24,4 +24,8 @@
     <string name="pie_chart">Pie chart</string>
     <string name="dot_chart">Dot chart</string>
     <string name="todays_mood_is">Today\'s mood is</string>
+    <string name="save">Save</string>
+    <string name="write_your_thoughts">Write your thoughts</string>
+    <string name="saved">Saved</string>
+    <string name="journal">Journal</string>
 </resources>
