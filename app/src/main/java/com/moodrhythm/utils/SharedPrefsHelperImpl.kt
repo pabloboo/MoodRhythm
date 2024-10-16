@@ -11,13 +11,22 @@ class SharedPrefsHelperImpl @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) : SharedPrefsHelper {
 
-    private fun getCurrentDay(): String {
+    override fun getCurrentDay(): String {
         val format = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         return format.format(LocalDate.now())
     }
 
     override fun getCurrentDayEmotionIdKey(): String {
         return SharedPrefsConstants.CURRENT_DAY_EMOTION_ID + "-" + getCurrentDay()
+    }
+
+    override fun getDayBefore(date: String): String {
+        val format = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        return format.format(LocalDate.parse(date).minusDays(1))
+    }
+
+    override fun getEmotionIdKey(date: String): String {
+        return SharedPrefsConstants.CURRENT_DAY_EMOTION_ID + "-" + date
     }
 
     override fun getSharedPreferencesValueInt(key: String): Int {

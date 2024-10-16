@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,25 +23,40 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import com.moodrhythm.R
 import com.moodrhythm.ResultsActivity
 import com.moodrhythm.ui.theme.MoodRhythmTheme
 import com.moodrhythm.utils.CustomAppBar
+import com.moodrhythm.utils.MockSharedPreferences
+import com.moodrhythm.utils.SharedPrefsConstants.MAX_STREAK
+import com.moodrhythm.utils.SharedPrefsHelper
+import com.moodrhythm.utils.SharedPrefsHelperImpl
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class StatsActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var sharedPreferencesHelper: SharedPrefsHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             MoodRhythmTheme {
-                StatsScreen(this)
+                StatsScreen(this, sharedPreferencesHelper)
             }
         }
     }
 }
 
 @Composable
-fun StatsScreen(activity: Activity) {
+fun StatsScreen(activity: Activity, sharedPreferencesHelper: SharedPrefsHelper) {
+    val context = LocalContext.current
+    val (currentStreak, maxStreak) = getStreaks(sharedPreferencesHelper)
+
     Scaffold(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) { innerPadding ->
         Column (
             modifier = Modifier.padding(innerPadding)
@@ -51,6 +67,21 @@ fun StatsScreen(activity: Activity) {
                     activity.startActivity(intent)
                 }
             )
+
+            // Current streak and max streak
+            Row {
+                Text(
+                    text = getString(context, R.string.current_streak) + ": $currentStreak",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(16.dp)
+                )
+                Text(
+                    text = getString(context, R.string.max_streak) + ": $maxStreak",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+
             StatsTitleCard(
                 modifier = Modifier,
                 title = R.string.yearly_stats,
@@ -105,10 +136,36 @@ fun journalStatsClick(activity: Activity) {
     activity.startActivity(intent)
 }
 
+fun getStreaks(sharedPreferencesHelper: SharedPrefsHelper): Pair<Int, Int> {
+    // Get current streak and max streak
+    var currentStreak = 0
+    var currentDate = sharedPreferencesHelper.getCurrentDay()
+
+    if (sharedPreferencesHelper.getSharedPreferencesValueInt(sharedPreferencesHelper.getCurrentDayEmotionIdKey()) != -1) {
+        currentStreak++
+        currentDate = sharedPreferencesHelper.getDayBefore(currentDate)
+        while (sharedPreferencesHelper.getSharedPreferencesValueInt(sharedPreferencesHelper.getEmotionIdKey(currentDate)) != -1) {
+            currentStreak++
+            currentDate = sharedPreferencesHelper.getDayBefore(currentDate)
+        }
+    }
+
+    var maxStreak = sharedPreferencesHelper.getSharedPreferencesValueInt(MAX_STREAK)
+    if (currentStreak > maxStreak) {
+        maxStreak = currentStreak
+        sharedPreferencesHelper.setSharedPreferencesValueInt(MAX_STREAK, maxStreak)
+    }
+
+    return Pair(currentStreak, maxStreak)
+}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
+    val mockSharedPreferences = MockSharedPreferences()
+    val sharedPreferencesHelper = SharedPrefsHelperImpl(mockSharedPreferences)
+
     MoodRhythmTheme {
-        StatsScreen(StatsActivity())
+        StatsScreen(StatsActivity(), sharedPreferencesHelper)
     }
 }

@@ -29,4 +29,6 @@
     <string name="saved">Saved</string>
     <string name="journal">Journal</string>
     <string name="update">Update</string>
+    <string name="current_streak">Current Streak</string>
+    <string name="max_streak">Max Streak</string>
 </resources>

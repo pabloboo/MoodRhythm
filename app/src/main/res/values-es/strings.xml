@@ -30,4 +30,6 @@
     <string name="saved">Guardado</string>
     <string name="journal">Diario</string>
     <string name="update">Actualizar</string>
+    <string name="current_streak">Racha actual</string>
+    <string name="max_streak">Racha máxima</string>
 </resources>
