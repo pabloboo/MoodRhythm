@@ -23,4 +23,5 @@
     <string name="saturday">S</string>
     <string name="pie_chart">Pie chart</string>
     <string name="dot_chart">Dot chart</string>
+    <string name="todays_mood_is">Today\'s mood is</string>
 </resources>

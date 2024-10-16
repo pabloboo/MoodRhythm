@@ -3,12 +3,13 @@ agp = "8.6.0"
 androidxHiltNavigationCompose = "1.0.0"
 androidxLifecycleViewmodelCompose = "2.4.1"
 desugar_jdk_libs = "2.1.2"
+glanceAppwidget = "1.1.0"
 hiltAndroid = "2.40.5"
 hiltAndroidGradlePlugin = "2.46"
 hiltLifecycleViewmodel = "1.0.0-alpha03"
 hiltNavigationCompose = "1.2.0"
 hiltNavigationComposeVersion = "1.0.0'"
-kotlin = "1.9.0"
+kotlin = "1.9.25"
 coreKtx = "1.10.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -27,6 +28,8 @@ truthVersion = "0.43"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glanceAppwidget" }
+androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glanceAppwidget" }
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltNavigationCompose" }
 androidx-hilt-lifecycle-viewmodel = { module = "androidx.hilt:hilt-lifecycle-viewmodel", version.ref = "hiltLifecycleViewmodel" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
